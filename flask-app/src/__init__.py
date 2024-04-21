@@ -3,8 +3,9 @@
 from flask import Flask
 from flaskext.mysql import MySQL
 
+
 # create a MySQL object that we will use in other parts of the API
-db = MySQL()
+db = MySQL()    
 
 def create_app():
     app = Flask(__name__)
@@ -29,14 +30,14 @@ def create_app():
     def welcome():
         return "<h1>Welcome to the 3200 boilerplate app</h1>"
 
-    # Import the various routes
-    from src.views import views
-    from src.customers.customers import customers
-    from src.products.products  import products
+    # # Import the various routes
+    # from src.views import views
+    # from src.customers.customers import customers
+    # from src.products.products  import products
 
-    # Register the routes that we just imported so they can be properly handled
-    app.register_blueprint(views,       url_prefix='/v')
-    app.register_blueprint(customers,   url_prefix='/c')
-    app.register_blueprint(products,    url_prefix='/p')
+    # # Register the routes that we just imported so they can be properly handled
+    # app.register_blueprint(views,       url_prefix='/v')
+    # app.register_blueprint(customers,   url_prefix='/c')
+    # app.register_blueprint(products,    url_prefix='/p')
 
     return app
