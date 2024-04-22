@@ -93,7 +93,9 @@ def getUsers():
     cursor = db.get_db().cursor()
     username = request.args.get('username')
 
-    cursor.execute("SELECT Username FROM Login WHERE Username LIKE '%{0}%'".format(username))
+    if username:
+        cursor.execute("SELECT Username FROM Login WHERE Username LIKE '%{0}%'".format(username))
+    else: cursor.execute("SELECT Username FROM Login")
     result = cursor.fetchall()
     cursor.close()
 
