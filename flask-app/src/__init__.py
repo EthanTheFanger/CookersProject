@@ -30,7 +30,7 @@ def create_app():
     def welcome():
         return "<h1>Welcome to the 3200 boilerplate app</h1>"
 
-    from src.Login.login import login
+    from src.account.account import account
     # # Import the various routes
     # from src.views import views
     # from src.customers.customers import customers
@@ -40,6 +40,6 @@ def create_app():
     # app.register_blueprint(views,       url_prefix='/v')
     # app.register_blueprint(customers,   url_prefix='/c')
     # app.register_blueprint(products,    url_prefix='/p')
-    app.register_blueprint(login, url_prefix = '/login')
+    app.register_blueprint(account, url_prefix = '/acc')
 
     return app

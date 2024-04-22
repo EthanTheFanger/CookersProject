@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS User
     # we want the child table to be set to null when the parent is deleted
     FOREIGN KEY(Username) REFERENCES Login(Username)
     ON DELETE SET NULL
+    ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Recipe
