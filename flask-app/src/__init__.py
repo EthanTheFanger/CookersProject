@@ -31,6 +31,7 @@ def create_app():
         return "<h1>Welcome to the 3200 boilerplate app</h1>"
 
     from src.account.account import account
+    from src.user.user import user
     # # Import the various routes
     # from src.views import views
     # from src.customers.customers import customers
@@ -41,5 +42,6 @@ def create_app():
     # app.register_blueprint(customers,   url_prefix='/c')
     # app.register_blueprint(products,    url_prefix='/p')
     app.register_blueprint(account, url_prefix = '/acc')
+    app.register_blueprint(user, url_prefix = '/user')
 
     return app
