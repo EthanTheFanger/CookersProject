@@ -5,7 +5,7 @@ from src import db
 recipe = Blueprint('recipe', __name__)
 
 #define route
-@recipe.route("/", methods=['GET','POST'])
+@recipe.route("/difficulty", methods=['GET'])
 
 #select all recipes that take less time then the provided amount of time
 def max_difficulty():
@@ -25,8 +25,9 @@ def max_difficulty():
     the_response.mimetype = 'application/json'
     return the_response
 
-def exclude_ingredient():
-    cursor = db.get_db().cursor() 
-    excluded = request.args.get('excluded')
+#specify route
+@recipe.route("/excludeingredients", methods=['GET'])
 
-    ingredients = cursor.execute()
+def withoutingredients():
+    return 0
+    
