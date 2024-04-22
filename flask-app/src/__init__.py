@@ -17,10 +17,10 @@ def create_app():
 
     # these are for the DB object to be able to connect to MySQL. 
     app.config['MYSQL_DATABASE_USER'] = 'root'
-    app.config['MYSQL_DATABASE_PASSWORD'] = open('/secrets/db_password.txt').readline()
+    app.config['MYSQL_DATABASE_PASSWORD'] = 'RootCookers123'
     app.config['MYSQL_DATABASE_HOST'] = 'db'
     app.config['MYSQL_DATABASE_PORT'] = 3306
-    app.config['MYSQL_DATABASE_DB'] = 'Cookers'  # Change this to your DB name
+    app.config['MYSQL_DATABASE_DB'] = 'CookerDatabase'  # Change this to your DB name
 
     # Initialize the database object with the settings above. 
     db.init_app(app)
@@ -30,7 +30,7 @@ def create_app():
     def welcome():
         return "<h1>Welcome to the 3200 boilerplate app</h1>"
 
-    from src.Login import login
+    from src.Login.login import login
     # # Import the various routes
     # from src.views import views
     # from src.customers.customers import customers
