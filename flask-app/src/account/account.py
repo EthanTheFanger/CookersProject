@@ -95,7 +95,22 @@ def getUsers():
 
     if username:
         cursor.execute("SELECT Username FROM Login WHERE Username LIKE '%{0}%'".format(username))
-    else: cursor.execute("SELECT Username FROM Login")
+    else: 
+        cursor.execute("SELECT Username FROM Login")
+    result = cursor.fetchall()
+    cursor.close()
+
+    return jsonify({'result': result}), 200
+
+@account.route("/getName", methods = ['GET'])
+def getUsersName():
+    cursor = db.get_db().cursor()
+    name = request.args.get('name')
+
+    if name:
+        cursor.execute("SELECT Name FROM User WHERE Name LIKE '%{0}%'".format(name))
+    else: 
+        cursor.execute("SELECT Name FROM User")
     result = cursor.fetchall()
     cursor.close()
 
