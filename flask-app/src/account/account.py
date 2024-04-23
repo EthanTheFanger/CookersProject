@@ -108,9 +108,9 @@ def getUsersName():
     name = request.args.get('name')
 
     if name:
-        cursor.execute("SELECT Name FROM User WHERE Name LIKE '%{0}%'".format(name))
+        cursor.execute("SELECT Name, UserID FROM User WHERE Name LIKE '%{0}%'".format(name))
     else: 
-        cursor.execute("SELECT Name FROM User")
+        cursor.execute("SELECT Name, UserID FROM User")
     result = cursor.fetchall()
     cursor.close()
 

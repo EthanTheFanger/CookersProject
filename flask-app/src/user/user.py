@@ -10,7 +10,9 @@ def favorited_recipes(userid):
 
     cursor.execute("SELECT FavouriteRecipe, Name FROM Favourites JOIN Recipe ON Favourites.FavouriteRecipe = Recipe.RecipeID WHERE UserID = '{0}'".format(userid))
 
-    results = cursor.fetchall()
+    results = []
+    for row in cursor.fetchall():
+        results.append({'FavouriteRecipe': row[0],'Name': row[1]})  
     cursor.close()
 
     return jsonify(results), 200
@@ -85,9 +87,11 @@ def allergies(userid):
             else:
                 cursor.execute("INSERT INTO Allergies (UserID, Allergies) VALUES ('{0}', '{1}')".format(userid, allergy))
             db.get_db().commit()
-        return jsonify({'result': True}), 200   
+        return jsonify(results), 200   
     else:
-        results = cursor.fetchall()
+        results = []
+        for row in cursor.fetchall():
+            results.append({'Allergies': row[0]})  
         cursor.close()
         return jsonify(results), 200
 
@@ -141,3 +145,24 @@ def userNutrition(userid):
     }
 
     return jsonify(sums), 200
+
+
+@user.route("/<userid>/budget", methods=['GET', 'POST', 'PUT'])
+def budget(userid):
+    cursor = db.get_db().cursor()
+    cursor.execute("SELECT Budget FROM User WHERE UserID = '{0}'".format(userid))
+    exist = cursor.fetchone()
+
+    budget = request.args.get('budget')
+
+    if budget:
+        if exist:
+            cursor.execute("UPDATE User SET Budget = '{0}' WHERE UserID = '{1}'".format(budget, userid))
+        else:
+            cursor.execute("INSERT INTO User (UserID, Budget) VALUES ('{0}', '{1}')".format(userid, budget))
+        db.get_db().commit()
+
+    cursor.execute("SELECT Budget FROM User WHERE UserID = '{0}'".format(userid))
+    cursor.close()
+    result = {'Budget': cursor.fetchall()[0][0]}    
+    return jsonify(result), 200
