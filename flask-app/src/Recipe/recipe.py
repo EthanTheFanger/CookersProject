@@ -92,23 +92,23 @@ def recommended():
     cursor.close()
     return jsonify({'result': result}), 200
 
-@recipe.route("/add", methods=["POST", "GET"])
 
 # adds information about the recipe uploaded by the user
-def add():
+@recipe.route("/add", methods=["POST", "GET"])
+def addrecipe():
     cursor = db.get_db().cursor()
-    recipeid = request.form.get('recipeid')
-    name = request.form.get('name')
-    cost = request.form.get('cost')
-    time = request.form.get('time')
-    lactose = request.form.get('lactose')
-    gluten = request.form.get('gluten')
-    views = request.form.get('views')
-    steps = request.form.get('steps')
-    culture = request.form.get('culture')
-    datecreated = request.form.get('datecreated')
+    recipeid = request.args.get('recipeid')
+    name = request.args.get('name')
+    cost = request.args.get('cost')
+    time = request.args.get('time')
+    lactose = request.args.get('lactose')
+    gluten = request.args.get('gluten')
+    views = request.args.get('views')
+    steps = request.args.get('steps')
+    culture = request.args.get('culture')
+    datecreated = request.args.get('datecreated')
 
-    cursor.execute("INSERT INTO Recipe (RecipeID, Name, Cost, TimeToMake, LactoseFree, GlutenFree, Views, Steps, Culture, DateCreated) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (recipeid, name, cost, time, lactose, gluten, views, steps, culture, datecreated))
+    cursor.execute("INSERT INTO Recipe (RecipeID, Name, Cost, TimeToMake, LactoseFree, GlutenFree, Views, Steps, Culture, DateCreated) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}')".format(recipeid, name, cost, time, lactose, gluten, views, steps, culture, datecreated))
     db.get_db().commit()
     cursor.close()
     return jsonify({'result': True}), 200

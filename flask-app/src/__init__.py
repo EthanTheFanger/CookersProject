@@ -32,6 +32,7 @@ def create_app():
 
     from src.account.account import account
     from src.user.user import user
+    from src.Recipe.recipe import recipe
     # # Import the various routes
     # from src.views import views
     # from src.customers.customers import customers
@@ -43,5 +44,6 @@ def create_app():
     # app.register_blueprint(products,    url_prefix='/p')
     app.register_blueprint(account, url_prefix = '/acc')
     app.register_blueprint(user, url_prefix = '/user')
+    app.register_blueprint(recipe, url_prefix = '/recipe')
 
     return app
