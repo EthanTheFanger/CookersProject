@@ -196,10 +196,10 @@ insert into Login (Username, Password) values ('ideclerc13', '8jbTSVF5we23cu');
 
 #Populate User
 DELETE From User;
-insert into User (UserID, Name, Budget, Health, Username) values (1, 'Ronalda Berrane', 141.18, 'Bad', 'credington0');
-insert into User (UserID, Name, Budget, Health, Username) values (2, 'Durant Carmel', 168.07, 'Good', 'dcaffin1');
-insert into User (UserID, Name, Budget, Health, Username) values (3, 'Hy Hanny', 112.56, 'Average', 'tdeas2');
-insert into User (UserID, Name, Budget, Health, Username) values (4, 'Stillman Takle', 187, 'Bad', 'amanshaw3');
+insert into User (UserID, Name, Budget, Health, Username) values (1, 'Alex Ramirez', 141.18, 'Bad', 'credington0');
+insert into User (UserID, Name, Budget, Health, Username) values (2, 'Amy Green', 168.07, 'Good', 'dcaffin1');
+insert into User (UserID, Name, Budget, Health, Username) values (3, 'Emily Stone', 112.56, 'Average', 'tdeas2');
+insert into User (UserID, Name, Budget, Health, Username) values (4, 'William Gupta', 187, 'Bad', 'amanshaw3');
 insert into User (UserID, Name, Budget, Health, Username) values (5, 'Fanya Huygen', 87.52, 'Average', 'asuett4');
 insert into User (UserID, Name, Budget, Health, Username) values (6, 'Hunfredo Stinton', 109.02, 'Excellent', 'vbernardeschi5');
 insert into User (UserID, Name, Budget, Health, Username) values (7, 'Bekki Bothbie', 106.1, 'Excellent', 'fraoux6');
