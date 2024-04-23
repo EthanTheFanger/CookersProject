@@ -47,13 +47,13 @@ def delete_favorited_recipe(userid, recipeid):
 
     return jsonify({'result': True}), 200
 
-@user.route("/<userid>/FoodRestrictions", methods=['GET', 'POST'])
+@user.route("/<userid>/FoodRestrictions", methods=['GET', 'POST', 'DELETE'])
 def food_restrictions(userid):
     cursor = db.get_db().cursor()
     cursor.execute("SELECT FoodRestrictions FROM FoodRestrictions WHERE UserID = '{0}'".format(userid))
 
     addFood_restrictions = request.args.getlist('foodRestrictions')
-
+    removeFood_restrictions = request.args.getlist('removeFoodRestrictions')
     
     if addFood_restrictions:
         for restriction in addFood_restrictions:
@@ -64,19 +64,32 @@ def food_restrictions(userid):
             else:
                 cursor.execute("INSERT INTO FoodRestrictions (UserID, FoodRestrictions) VALUES ('{0}', '{1}')".format(userid, restriction))
             db.get_db().commit()
-        return jsonify({'result': True}), 200
+    if removeFood_restrictions:
+        for restriction in removeFood_restrictions:
+            cursor.execute("SELECT * FROM FoodRestrictions WHERE UserID = '{0}' AND FoodRestrictions = '{1}'".format(userid, restriction))
+            existing_restriction = cursor.fetchone()
+            if(existing_restriction):
+                cursor.execute("DELETE FROM FoodRestrictions WHERE UserID = '{0}' AND FoodRestrictions = '{1}'".format(userid, restriction))
+                db.get_db().commit()
+                return jsonify({'result': True}), 200
+            else:
+                return jsonify({'result': False, 'reason': 'Food restriction does not exists in food restrictions.'}), 400
+            db.get_db().commit()
     else:
-        results = cursor.fetchall()
+        results = []
+        for row in cursor.fetchall():
+            results.append({'FoodRestrictions': row[0]})  
         cursor.close()
-
         return jsonify(results), 200
 
-@user.route("/<userid>/Allergies", methods=['GET', 'POST'])
+
+@user.route("/<userid>/Allergies", methods=['GET', 'POST', 'DELTE'])
 def allergies(userid):
     cursor = db.get_db().cursor()
     cursor.execute("SELECT Allergies FROM Allergies WHERE UserID = '{0}'".format(userid))
 
     addAllergies = request.args.getlist('allergies')
+    removeAllergies = request.args.getlist('removeAllergies')
 
     if addAllergies:
         for allergy in addAllergies:
@@ -87,7 +100,15 @@ def allergies(userid):
             else:
                 cursor.execute("INSERT INTO Allergies (UserID, Allergies) VALUES ('{0}', '{1}')".format(userid, allergy))
             db.get_db().commit()
-        return jsonify(results), 200   
+    if removeAllergies:
+        for allergy in removeAllergies:
+            cursor.execute("SELECT * FROM Allergies WHERE UserID = '{0}' AND Allergies = '{1}'".format(userid, allergy))
+            existing_allergy = cursor.fetchone()
+            if(existing_allergy):
+                cursor.execute("DELETE FROM Allergies WHERE UserID = '{0}' AND Allergies = '{1}'".format(userid, allergy))
+            else:
+                return jsonify({'result': False, 'reason': 'Allergy does not exists in allergies.'}), 400
+            db.get_db().commit()
     else:
         results = []
         for row in cursor.fetchall():

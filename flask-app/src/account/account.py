@@ -19,7 +19,7 @@ def loginCheck():
     if result:
         return jsonify({'result': True}), 200
     else:
-        return jsonify({'result': False}), 200
+        return jsonify({'result': False}), 404
 
 @account.route("/register", methods = ['GET','POST'])
 def registerAccount():
@@ -33,7 +33,7 @@ def registerAccount():
     result = cursor.fetchall()
 
     if result:
-        return jsonify({'result': False, 'reason': 'Account already exists.'}), 200
+        return jsonify({'result': False, 'reason': 'Account already exists.'}), 404
     else:
         cursor.execute("INSERT INTO Login (Username, Password) VALUES ('{0}', '{1}')".format(username, password))
         db.get_db().commit()
@@ -63,7 +63,7 @@ def updateUsername():
     result = cursor.fetchall()
 
     if not result:
-        return jsonify({'result': False, 'reason': 'Username does not exist.'}), 200
+        return jsonify({'result': False, 'reason': 'Username does not exist.'}), 404
     else:
         cursor.execute("UPDATE Login SET Username='{0}' WHERE Username='{1}'".format(NewUsername, CurrentUsername))
         db.get_db().commit()
@@ -81,7 +81,7 @@ def updatePassword():
     result = cursor.fetchall()
 
     if not result:
-        return jsonify({'result': False, 'reason': 'Username does not exist.'}), 200
+        return jsonify({'result': False, 'reason': 'Username does not exist.'}), 404
     else:
         cursor.execute("UPDATE Login SET Password='{0}' WHERE Username='{1}'".format(password, username))
         db.get_db().commit()
