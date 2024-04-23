@@ -4,7 +4,6 @@ from src import db
 
 recipe = Blueprint('recipe', __name__)
 
-#define route
 @recipe.route("/", methods=["GET"])
 
 #gets all the recipes
@@ -23,7 +22,6 @@ def get_recipes():
     the_response.mimetype = 'application/json'
     return the_response
 
-#define route
 @recipe.route("/difficulty", methods=['GET'])
 
 #select all recipes that take less steps then the provided amount of steps
@@ -37,7 +35,6 @@ def max_difficulty():
 
     return jsonify({'result': result}), 200
 
-#define function
 @recipe.route("/include", methods=["GET"])
 
 #Returns a list of recipes that include the provided list of ingredients
@@ -97,18 +94,52 @@ def recommended():
 # adds information about the recipe uploaded by the user
 def add():
     cursor = db.get_db().cursor()
-    recipeid = request.form.get('recipeid')
-    name = request.form.get('name')
-    cost = request.form.get('cost')
-    time = request.form.get('time')
-    lactose = request.form.get('lactose')
-    gluten = request.form.get('gluten')
-    views = request.form.get('views')
-    steps = request.form.get('steps')
-    culture = request.form.get('culture')
-    datecreated = request.form.get('datecreated')
+    recipeid = request.args.get('recipeid')
+    name = request.args.get('name')
+    cost = request.args.get('cost')
+    time = request.args.get('time')
+    lactose = request.args.get('lactose')
+    gluten = request.args.get('gluten')
+    views = request.args.get('views')
+    steps = request.args.get('steps')
+    culture = request.args.get('culture')
+    datecreated = request.args.get('datecreated')
 
-    cursor.execute("INSERT INTO Recipe (RecipeID, Name, Cost, TimeToMake, LactoseFree, GlutenFree, Views, Steps, Culture, DateCreated) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (recipeid, name, cost, time, lactose, gluten, views, steps, culture, datecreated))
+    cursor.execute("INSERT INTO Recipe (RecipeID, Name, Cost, TimeToMake, LactoseFree, GlutenFree, Views, Steps, Culture, DateCreated) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);", (recipeid, name, cost, time, lactose, gluten, views, steps, culture, datecreated))
+    db.get_db().commit()
+    cursor.close()
+    return jsonify({'result': True}), 200
+
+@recipe.route("/update", methods=["PUT", "GET"])
+
+#changes the recipe information
+def change_recipe():
+    cursor = db.get_db().cursor()
+    recipeid = request.args.get('recipeid')
+    name = request.args.get('name')
+    cost = request.args.get('cost')
+    time = request.args.get('time')
+    lactose = request.args.get('lactose')
+    gluten = request.args.get('gluten')
+    views = request.args.get('views')
+    steps = request.args.get('steps')
+    culture = request.args.get('culture')
+    datecreated = request.args.get('datecreated')
+
+    cursor.execute("UPDATE Recipe SET RecipeID = %s, Name = %s, Cost = %s, TimeToMake = %s, LactoseFree = %s, GlutenFree = %s, Views = %s, Steps = %s, Culture = %s, DateCreated = %s) ;", (recipeid, name, cost, time, lactose, gluten, views, steps, culture, datecreated))
+    db.get_db().commit()
+    cursor.close()
+    return jsonify({'result': True}), 200
+
+
+@recipe.route("/delete", methods = ["DELETE", "GET"])
+
+#deletes a recipe
+def delete_recipe():
+    cursor = db.get_db().cursor()
+    recipeid = request.args.get('recipeid')
+
+    cursor.execute("DELETE FROM Recipe WHERE RecipeID = '%s'", recipeid)
     db.get_db().commit()
     cursor.close()
     return jsonify({'result': True}), 200
