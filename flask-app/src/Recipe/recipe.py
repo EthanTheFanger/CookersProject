@@ -23,7 +23,6 @@ def get_recipes():
     the_response.mimetype = 'application/json'
     return the_response
 
-
 #define route
 @recipe.route("/difficulty", methods=['GET'])
 
@@ -44,9 +43,9 @@ def max_difficulty():
 #Returns a list of recipes that include the provided list of ingredients
 def include_ingredients():
     cursor = db.get_db().cursor()
-    ingredients = request.args.to_dict().get('ingredients')
+    ingredients = tuple(request.args.get('ingredients').split(','))
 
-    cursor.execute("SELECT * FROM Recipe JOIN Ingredients ON Recipe.RecipeID = Ingredients.RecipeID WHERE Ingredients.Ingredient NOT IN {ingredients};", {ingredients})
+    cursor.execute("SELECT * FROM Recipe JOIN Ingredients ON Recipe.RecipeID = Ingredients.RecipeID WHERE Ingredients.Ingredient IN (%s);" % (','.join(['%s'] * len(ingredients))), ingredients)
 
     result = cursor.fetchall()
     cursor.close()
@@ -57,11 +56,59 @@ def include_ingredients():
 #returns a list of recipes that exclude the rpovided list of ingredients
 def exclude_ingredients():
     cursor = db.get_db().cursor()
-    ingredients = request.args.to_dict().get('ingredients')
+    ingredients = tuple(request.args.get('ingredients').split(','))
 
-    cursor.execute("SELECT * FROM Recipe JOIN Ingredients ON Recipe.RecipeID = Ingredients.RecipeID WHERE Ingredients.Ingredient IN {ingredients};", {ingredients})
+    cursor.execute("SELECT * FROM Recipe JOIN Ingredients ON Recipe.RecipeID = Ingredients.RecipeID WHERE Ingredients.Ingredient NOT IN (%s);" % (','.join(['%s'] * len(ingredients))), ingredients)
 
     result = cursor.fetchall()
     cursor.close()
     return jsonify({'result': result}), 200
 
+@recipe.route("/minimumnutrients", methods=["GET"])
+
+#Returns a list of recipes that meets the minimum nutrition rating provided by the user
+def min_nutrients():
+    cursor = db.get_db().cursor()
+    calories = request.args.get('calories')
+    carbohydrate = request.args.get('carbohydrate')
+    sodium = request.args.get('sodium')
+    protein = request.args.get('protein')
+    Cholestrol = request.args.get('cholestrol')
+
+    cursor.execute("SELECT * FROM Nutrition WHERE Nutrition.Calories < %s AND Nutrition.TotalCarbohydrate < %s AND Nutrition.Sodium < %s AND Nutrition.Protein < %s AND Nutrition.Cholestrol < %s ORDER BY Nutrition.RecipeID", (calories, carbohydrate, sodium, protein, Cholestrol)) 
+    result = cursor.fetchall()
+    cursor.close()
+    return jsonify({'result': result}), 200
+
+@recipe.route("/recommended", methods=["GET"])
+
+#Returns a list of recipes suggested to the user using their own preferences.
+def recommended():
+    cursor = db.get_db().cursor()
+    userid = request.args.to_dict().get('userid')
+
+    cursor.execute("SELECT Recipe.RecipeID, Recipe.Steps, Recipe.Name FROM RecommendationList JOIN RecommendationRecipe ON RecommendationList.ListID = RecommendationRecipe.ListID JOIN Recipe ON RecommendationRecipe.Recipe = Recipe.RecipeID WHERE RecommendationList.UserID = %s", (userid))
+    result = cursor.fetchall()
+    cursor.close()
+    return jsonify({'result': result}), 200
+
+@recipe.route("/add", methods=["POST", "GET"])
+
+# adds information about the recipe uploaded by the user
+def add():
+    cursor = db.get_db().cursor()
+    recipeid = request.form.get('recipeid')
+    name = request.form.get('name')
+    cost = request.form.get('cost')
+    time = request.form.get('time')
+    lactose = request.form.get('lactose')
+    gluten = request.form.get('gluten')
+    views = request.form.get('views')
+    steps = request.form.get('steps')
+    culture = request.form.get('culture')
+    datecreated = request.form.get('datecreated')
+
+    cursor.execute("INSERT INTO Recipe (RecipeID, Name, Cost, TimeToMake, LactoseFree, GlutenFree, Views, Steps, Culture, DateCreated) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (recipeid, name, cost, time, lactose, gluten, views, steps, culture, datecreated))
+    db.get_db().commit()
+    cursor.close()
+    return jsonify({'result': True}), 200
